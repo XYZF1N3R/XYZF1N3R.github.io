@@ -8,42 +8,43 @@
 </head>
 <body>
     <div id="game">
-        <div id="top-buttons">
+        <h2>Баланс: <span id="balance">100</span> 💰</h2>
+
+        <button id="upgrade-btn" onclick="upgradeCurrentLocation()">Улучшить (<span id="upgrade-cost">10</span>💰)</button>
+
+        <div id="locations">
+            <div id="location-hangar" class="location active">
+                <h2>Ангар</h2>
+                <p>Здесь ничего нет.</p>
+            </div>
+
+            <div id="location-chicken_coop" class="location">
+                <h2>Курятник</h2>
+            </div>
+
+            <div id="location-barn" class="location">
+                <h2>Коровник</h2>
+            </div>
+
+            <div id="location-pigsty" class="location">
+                <h2>Свинарник</h2>
+            </div>
+
+            <div id="location-wheat_field" class="location">
+                <h2>Ферма пшеницы</h2>
+            </div>
+        </div>
+
+        <div id="bottom-buttons">
             <button onclick="showLocation('location-hangar')">Ангар</button>
             <button onclick="showLocation('location-chicken_coop')">Курятник</button>
             <button onclick="showLocation('location-barn')">Коровник</button>
             <button onclick="showLocation('location-pigsty')">Свинарник</button>
             <button onclick="showLocation('location-wheat_field')">Ферма</button>
         </div>
-        
-        <h2>Баланс: <span id="balance">0</span> 💰</h2>
-
-        <div id="location-hangar" class="location">
-            <h2>Ангар</h2>
-            <p>Здесь ничего нет.</p>
-        </div>
-
-        <div id="location-chicken_coop" class="location">
-            <h2>Курятник</h2>
-            <button onclick="upgradeLocation('chicken_coop')">Улучшить курятник (<span id="cost-chicken_coop">10</span>💰)</button>
-        </div>
-
-        <div id="location-barn" class="location">
-            <h2>Коровник</h2>
-            <button onclick="upgradeLocation('barn')">Улучшить коровник (<span id="cost-barn">20</span>💰)</button>
-        </div>
-
-        <div id="location-pigsty" class="location">
-            <h2>Свинарник</h2>
-            <button onclick="upgradeLocation('pigsty')">Улучшить свинарник (<span id="cost-pigsty">30</span>💰)</button>
-        </div>
-
-        <div id="location-wheat_field" class="location">
-            <h2>Ферма пшеницы</h2>
-            <button onclick="upgradeLocation('wheat_field')">Улучшить ферму (<span id="cost-wheat_field">50</span>💰)</button>
-        </div>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
