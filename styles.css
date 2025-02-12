@@ -16,35 +16,37 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Верхние квадратные кнопки */
-#top-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+/* Баланс сверху */
+h2 {
+    margin: 10px 0;
 }
 
-#top-buttons button {
-    width: 50px;
-    height: 50px;
-    font-size: 12px;
+/* Кнопка улучшения над локациями */
+#upgrade-btn {
+    width: 90%;
+    margin: 10px auto;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
     background-color: #4caf50;
     color: white;
-    border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s;
 }
 
-#top-buttons button:hover {
+#upgrade-btn:hover {
     background-color: #45a049;
 }
 
-/* Стили баланса */
-h2 {
-    margin: 10px 0;
+/* Локации */
+#locations {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Локации */
 .location {
     display: none;
     opacity: 0;
@@ -58,22 +60,26 @@ h2 {
     transform: scale(1);
 }
 
-/* Кнопки улучшений */
-button {
-    display: block;
-    width: 80%;
-    margin: 10px auto;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
+/* Кнопки локаций снизу */
+#bottom-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+#bottom-buttons button {
+    width: 60px;
+    height: 60px;
+    font-size: 12px;
     background-color: #4caf50;
     color: white;
+    border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s;
 }
 
-button:hover {
+#bottom-buttons button:hover {
     background-color: #45a049;
 }
 
