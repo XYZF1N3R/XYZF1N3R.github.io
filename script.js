@@ -1,10 +1,12 @@
-window.onload = () => {
+document.addEventListener("DOMContentLoaded", () => {
     showLocation("location-hangar"); // Начальная локация - ангар
     startIncome(); // Запускаем начисление денег
     updateBalanceUI(); // Показываем баланс
-};
+});
 
 let balance = 100; // Начальный баланс
+let currentLocation = "chicken_coop"; // Локация по умолчанию
+
 let upgrades = {
     chicken_coop: { level: 1, income: 1, cost: 10 },
     barn: { level: 1, income: 2, cost: 20 },
@@ -13,35 +15,38 @@ let upgrades = {
 };
 
 function showLocation(locationId) {
-    let location = document.getElementById(locationId);
-    if (!location) {
-        console.error(`Локация ${locationId} не найдена!`);
-        return;
-    }
-
     document.querySelectorAll(".location").forEach(loc => loc.classList.remove("active"));
-    location.classList.add("active");
+    document.getElementById(locationId).classList.add("active");
+
+    let locationKey = locationId.replace("location-", "");
+    if (upgrades[locationKey]) {
+        currentLocation = locationKey;
+        updateUpgradeButton();
+    } else {
+        currentLocation = null;
+        document.getElementById("upgrade-btn").style.display = "none";
+    }
 }
 
-function upgradeLocation(location) {
-    let upgrade = upgrades[location];
+function upgradeCurrentLocation() {
+    if (!currentLocation) return;
+
+    let upgrade = upgrades[currentLocation];
 
     if (balance >= upgrade.cost) {
-        balance -= upgrade.cost;
-        upgrade.level++;
-        upgrade.income += Math.floor(upgrade.income * 0.5);
-        upgrade.cost = Math.floor(upgrade.cost * 1.5);
+        balance -= upgrade.cost; // Тратим деньги
+        upgrade.level++; // Увеличиваем уровень
+        upgrade.income += Math.floor(upgrade.income * 0.5); // Увеличиваем доход
+        upgrade.cost = Math.floor(upgrade.cost * 1.5); // Делаем следующее улучшение дороже
 
         updateBalanceUI();
-        updateCostUI(location);
+        updateUpgradeButton();
 
-        let button = document.querySelector(`button[onclick="upgradeLocation('${location}')"]`);
-        if (button) {
-            button.classList.add("upgrade-effect");
-            setTimeout(() => button.classList.remove("upgrade-effect"), 500);
-        }
+        let button = document.getElementById("upgrade-btn");
+        button.classList.add("upgrade-effect");
+        setTimeout(() => button.classList.remove("upgrade-effect"), 500);
 
-        console.log(`Локация ${location} улучшена до ${upgrade.level} уровня! Новый доход: ${upgrade.income}, новая цена: ${upgrade.cost}`);
+        console.log(`Локация ${currentLocation} улучшена до ${upgrade.level} уровня! Новый доход: ${upgrade.income}, новая цена: ${upgrade.cost}`);
     } else {
         console.log("Недостаточно денег!");
     }
@@ -49,19 +54,22 @@ function upgradeLocation(location) {
 
 function startIncome() {
     setInterval(() => {
-        let totalIncome = Object.values(upgrades).reduce((sum, upg) => sum + upg.income, 0);
+        let totalIncome = 0;
+        for (let key in upgrades) {
+            totalIncome += upgrades[key].income;
+        }
         balance += totalIncome;
         updateBalanceUI();
     }, 3000);
 }
 
 function updateBalanceUI() {
-    let balanceEl = document.getElementById("balance");
-    if (balanceEl) balanceEl.textContent = balance;
+    document.getElementById("balance").textContent = balance;
 }
 
-function updateCostUI(location) {
-    let costEl = document.getElementById(`cost-${location}`);
-    if (costEl) costEl.textContent = upgrades[location].cost;
+function updateUpgradeButton() {
+    if (!currentLocation) return;
+    let upgrade = upgrades[currentLocation];
+    document.getElementById("upgrade-cost").textContent = upgrade.cost;
+    document.getElementById("upgrade-btn").style.display = "block";
 }
-
