@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tūrisma aģentūra</title>
+    <title>Tūrisma aģentūra - JS ROUTE</title>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <style>
         body {
@@ -43,19 +43,29 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
         }
-        .services {
-            display: flex;
-            justify-content: space-around;
+        .search-bar {
             text-align: center;
-            margin-top: 20px;
+            margin-bottom: 20px;
         }
-        .service {
+        .search-bar input {
+            padding: 10px;
+            width: 60%;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .tours {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+        .tour {
             background: #e0e0e0;
             padding: 20px;
             border-radius: 10px;
-            width: 30%;
         }
-        .service i {
+        .tour i {
             font-size: 40px;
             color: #4a4a4a;
         }
@@ -69,42 +79,46 @@
     </style>
 </head>
 <body>
-
 <header>
-    <h1>Tūrisma aģentūra</h1>
+    <h1>Tūrisma aģentūra - JS ROUTE</h1>
 </header>
-
 <nav>
     <a href="#">Sākums</a>
     <a href="#">Ceļojumi</a>
     <a href="#">Par mums</a>
     <a href="#">Kontakti</a>
 </nav>
-
 <div class="container">
-    <h2>Mūsu pakalpojumi</h2>
-    <div class="services">
-        <div class="service">
+    <div class="search-bar">
+        <input type="text" placeholder="Meklēt ceļojumu...">
+    </div>
+    <h2>Izvēlies labāko ceļojumu</h2>
+    <div class="tours">
+        <div class="tour">
             <i class="fas fa-plane"></i>
-            <h3>Aviobiļetes</h3>
-            <p>Labākās cenas avioreisiem.</p>
+            <h3>AAE 2025</h3>
+            <p>Arābu Emirāti - 14.02.2025 līdz 18.02.2025</p>
+            <p><strong>no 553.00€</strong></p>
         </div>
-        <div class="service">
+        <div class="tour">
+            <i class="fas fa-umbrella-beach"></i>
+            <h3>Atpūta Majorkā</h3>
+            <p>Maljorka - 27.04.2025 līdz 04.05.2025</p>
+            <p><strong>no 537.00€</strong></p>
+        </div>
+        <div class="tour">
             <i class="fas fa-hotel"></i>
-            <h3>Viesnīcas</h3>
-            <p>Rezervējiet labākās viesnīcas.</p>
-        </div>
-        <div class="service">
-            <i class="fas fa-map-marked-alt"></i>
-            <h3>Ekskursijas</h3>
-            <p>Aizraujoši maršruti visā pasaulē.</p>
+            <h3>Turcija 2025</h3>
+            <p>Turcija - 02.05.2025 līdz 03.05.2025</p>
+            <p><strong>no 415.00€</strong></p>
         </div>
     </div>
 </div>
-
 <footer>
-    <p>&copy; 2025 Tūrisma aģentūra. Visas tiesības aizsargātas.</p>
+    <p>&copy; 2025 Tūrisma aģentūra - JS ROUTE. Visas tiesības aizsargātas.</p>
 </footer>
+</body>
+</html>
 
 </body>
 </html>
