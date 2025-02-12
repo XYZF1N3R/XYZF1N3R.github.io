@@ -1,14 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
-    showLocation("location-farm"); // Начальная локация - ферма
+    showLocation("location-hangar"); // Начальная локация - ангар
     startIncome(); // Запускаем начисление денег
+    updateBalanceUI(); // Показываем баланс с самого начала
 });
 
-let balance = 0;
+let balance = 100; // Начальный баланс
 let upgrades = {
-    chicken_coop: { level: 1, income: 1 },
-    barn: { level: 1, income: 2 },
-    pigsty: { level: 1, income: 3 },
-    wheat_field: { level: 1, income: 5 }
+    chicken_coop: { level: 1, income: 1, cost: 10 },
+    barn: { level: 1, income: 2, cost: 20 },
+    pigsty: { level: 1, income: 3, cost: 30 },
+    wheat_field: { level: 1, income: 5, cost: 50 }
 };
 
 function showLocation(locationId) {
@@ -16,25 +17,25 @@ function showLocation(locationId) {
     document.getElementById(locationId).classList.add("active");
 }
 
-function enterHangar() {
-    showLocation("location-hangar");
-}
-
-function enterFarm() {
-    showLocation("location-farm");
-}
-
 function upgradeLocation(location) {
-    const button = document.querySelector(`button[onclick="upgradeLocation('${location}')"]`);
-    if (button) {
+    let upgrade = upgrades[location];
+
+    if (balance >= upgrade.cost) {
+        balance -= upgrade.cost; // Тратим деньги
+        upgrade.level++; // Увеличиваем уровень
+        upgrade.income += Math.floor(upgrade.income * 0.5); // Увеличиваем доход
+        upgrade.cost = Math.floor(upgrade.cost * 1.5); // Делаем следующее улучшение дороже
+
+        updateBalanceUI(); // Обновляем баланс на экране
+        updateCostUI(location); // Обновляем цену улучшения на кнопке
+
+        let button = document.querySelector(`button[onclick="upgradeLocation('${location}')"]`);
         button.classList.add("upgrade-effect");
         setTimeout(() => button.classList.remove("upgrade-effect"), 500);
 
-        // Улучшение локации
-        upgrades[location].level++;
-        upgrades[location].income += Math.floor(upgrades[location].income * 0.5);
-        
-        console.log(`Локация ${location} улучшена до уровня ${upgrades[location].level}`);
+        console.log(`Локация ${location} улучшена до ${upgrade.level} уровня! Новый доход: ${upgrade.income}, новая цена: ${upgrade.cost}`);
+    } else {
+        console.log("Недостаточно денег!");
     }
 }
 
@@ -45,6 +46,14 @@ function startIncome() {
             totalIncome += upgrades[key].income;
         }
         balance += totalIncome;
-        console.log(`Баланс: ${balance} (+${totalIncome})`);
+        updateBalanceUI();
     }, 3000); // Начисление денег каждые 3 секунды
+}
+
+function updateBalanceUI() {
+    document.getElementById("balance").textContent = balance;
+}
+
+function updateCostUI(location) {
+    document.getElementById(`cost-${location}`).textContent = upgrades[location].cost;
 }
