@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
+    loadGameState(); // Загружаем сохранённые данные
     showLocation("location-hangar"); // Начальная локация - ангар
     startIncome(); // Запускаем начисление денег
-    updateBalanceUI(); // Показываем баланс
+    updateBalanceUI(); // Обновляем баланс
 });
 
 let balance = 100; // Начальный баланс
@@ -13,6 +14,23 @@ let upgrades = {
     pigsty: { level: 1, income: 3, cost: 30 },
     wheat_field: { level: 1, income: 5, cost: 50 }
 };
+
+// Загружаем сохранённые данные
+function loadGameState() {
+    let savedBalance = localStorage.getItem("farmBalance");
+    let savedUpgrades = localStorage.getItem("farmUpgrades");
+
+    if (savedBalance !== null) balance = parseInt(savedBalance);
+    if (savedUpgrades !== null) upgrades = JSON.parse(savedUpgrades);
+
+    updateBalanceUI();
+}
+
+// Сохраняем данные
+function saveGameState() {
+    localStorage.setItem("farmBalance", balance);
+    localStorage.setItem("farmUpgrades", JSON.stringify(upgrades));
+}
 
 function showLocation(locationId) {
     document.querySelectorAll(".location").forEach(loc => loc.classList.remove("active"));
@@ -41,12 +59,11 @@ function upgradeCurrentLocation() {
 
         updateBalanceUI();
         updateUpgradeButton();
+        saveGameState(); // Сохраняем прогресс
 
         let button = document.getElementById("upgrade-btn");
         button.classList.add("upgrade-effect");
         setTimeout(() => button.classList.remove("upgrade-effect"), 500);
-
-        console.log(`Локация ${currentLocation} улучшена до ${upgrade.level} уровня! Новый доход: ${upgrade.income}, новая цена: ${upgrade.cost}`);
     } else {
         console.log("Недостаточно денег!");
     }
@@ -60,6 +77,7 @@ function startIncome() {
         }
         balance += totalIncome;
         updateBalanceUI();
+        saveGameState(); // Сохраняем баланс
     }, 3000);
 }
 
@@ -73,3 +91,4 @@ function updateUpgradeButton() {
     document.getElementById("upgrade-cost").textContent = upgrade.cost;
     document.getElementById("upgrade-btn").style.display = "block";
 }
+
