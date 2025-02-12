@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     showLocation("location-hangar"); // Начальная локация - ангар
     startIncome(); // Запускаем начисление денег
-    updateBalanceUI(); // Показываем баланс с самого начала
+    updateBalanceUI(); // Показываем баланс
 });
 
 let balance = 100; // Начальный баланс
@@ -24,10 +24,10 @@ function upgradeLocation(location) {
         balance -= upgrade.cost; // Тратим деньги
         upgrade.level++; // Увеличиваем уровень
         upgrade.income += Math.floor(upgrade.income * 0.5); // Увеличиваем доход
-        upgrade.cost = Math.floor(upgrade.cost * 1.5); // Делаем следующее улучшение дороже
+        upgrade.cost = Math.floor(upgrade.cost * 1.5); // Следующее улучшение дороже
 
-        updateBalanceUI(); // Обновляем баланс на экране
-        updateCostUI(location); // Обновляем цену улучшения на кнопке
+        updateBalanceUI(); // Обновляем баланс
+        updateCostUI(location); // Обновляем цену улучшения
 
         let button = document.querySelector(`button[onclick="upgradeLocation('${location}')"]`);
         button.classList.add("upgrade-effect");
@@ -45,9 +45,9 @@ function startIncome() {
         for (let key in upgrades) {
             totalIncome += upgrades[key].income;
         }
-        balance += totalIncome;
-        updateBalanceUI();
-    }, 3000); // Начисление денег каждые 3 секунды
+        balance += totalIncome; // Добавляем доход к балансу
+        updateBalanceUI(); // Обновляем баланс на экране
+    }, 3000); // Деньги приходят каждые 3 секунды
 }
 
 function updateBalanceUI() {
