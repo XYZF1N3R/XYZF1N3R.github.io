@@ -1,1 +1,28 @@
-<h1>QQ ALL</h1>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ферма 2D</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game">
+        <div id="location-hangar" class="location active">
+            <h2>Ангар</h2>
+            <button onclick="enterFarm()">Выйти на ферму</button>
+        </div>
+
+        <div id="location-farm" class="location">
+            <h2>Ферма</h2>
+            <button onclick="enterHangar()">Зайти в ангар</button>
+            <button onclick="upgradeLocation('chicken_coop')">Улучшить курятник</button>
+            <button onclick="upgradeLocation('barn')">Улучшить коровник</button>
+            <button onclick="upgradeLocation('pigsty')">Улучшить свинарник</button>
+            <button onclick="upgradeLocation('wheat_field')">Улучшить ферму пшеницы</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
