@@ -1,19 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NES Mobile Miner</title>
+    <title>NES Miner Pro</title>
     <style>
-        /* Стили остаются прежними */
+        :root {
+            --neon-green: #00ff9d;
+            --dark-bg: #1a1a1a;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: var(--dark-bg);
+            color: var(--neon-green);
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #00ff9d33;
+        }
+
+        button {
+            background: #006600;
+            border: none;
+            color: var(--neon-green);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px 0;
+            width: 100%;
+            font-size: 16px;
+            transition: transform 0.1s;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background: #003300;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            background: #006600;
+        }
+
+        .upgrade-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: #003300;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #002200;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--neon-green);
+            border-radius: 10px;
+            width: 0%;
+        }
+
+        .achievement {
+            background: #004400;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+        .unlocked {
+            background: #006600;
+        }
     </style>
 </head>
 <body>
-    <!-- HTML разметка остается прежней -->
+    <h2>🖥️ NES: <span id="nes">0</span></h2>
+    
+    <div class="container">
+        <div class="panel">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('mining')">⛏️ Майнинг</div>
+                <div class="tab" onclick="showTab('exchange')">💱 Обмен</div>
+                <div class="tab" onclick="showTab('achievements')">🏆 Достижения</div>
+            </div>
+
+            <div id="miningTab">
+                <!-- Улучшения -->
+            </div>
+
+            <div id="exchangeTab" style="display: none;">
+                <!-- Обмен -->
+            </div>
+
+            <div id="achievementsTab" style="display: none;">
+                <div id="achievementsList"></div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3>📊 Статистика</h3>
+            <p>Общий Hash/s: <span id="totalHash">0</span></p>
+            <p>Множитель: <span id="multiplier">1</span>x</p>
+            <p>Время игры: <span id="playTime">0</span></p>
+            <p>Всего добыто: <span id="totalMined">0</span> NES</p>
+        </div>
+    </div>
 
     <script>
         let gameState = {
-            nes: 0,
+            nes: 100,
             hash: 0,
             gpuLevel: 1,
             coolingLevel: 1,
@@ -21,120 +147,93 @@
             nerdLevel: 0,
             exchangeRate: 3.5,
             lastUpdate: Date.now(),
-            quantumLevel: 0
+            totalMined: 0,
+            playTime: 0,
+            achievements: [],
+            ratesHistory: []
         };
 
-        // Инициализация и загрузка сохранения
-        function loadGame() {
-            const saved = localStorage.getItem('nesMinerSave');
-            if(saved) {
-                const parsed = JSON.parse(saved);
-                Object.assign(gameState, parsed);
-                
-                // Расчет офлайн-майнинга
-                const offlineTime = Date.now() - gameState.lastUpdate;
-                gameState.hash += calculateTotalHash() * (offlineTime / 3600000);
-                gameState.lastUpdate = Date.now();
-            }
-        }
-
+        // Сохранение прогресса
         function saveGame() {
             gameState.lastUpdate = Date.now();
-            localStorage.setItem('nesMinerSave', JSON.stringify(gameState));
+            localStorage.setItem('nesMiner', JSON.stringify(gameState));
         }
 
-        // Система курса
-        function generateDailyRate() {
-            const now = new Date();
-            const seedDate = new Date(Date.UTC(
-                now.getUTCFullYear(), 
-                now.getUTCMonth(), 
-                now.getUTCDate()
-            ));
-            
-            if(now.getUTCHours() < 12) {
-                seedDate.setUTCDate(seedDate.getUTCDate() - 1);
-            }
-            
-            const seed = seedDate.toISOString().slice(0,10);
-            const hash = seed.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-            gameState.exchangeRate = Number((1 + (hash % 400)/100).toFixed(2));
-            startTimer();
-        }
-
-        // Таймер до обновления курса
-        function startTimer() {
-            const now = new Date();
-            let nextUpdate = new Date(Date.UTC(
-                now.getUTCFullYear(), 
-                now.getUTCMonth(), 
-                now.getUTCDate(), 
-                12
-            ));
-            
-            if(now.getUTCHours() >= 12) {
-                nextUpdate.setUTCDate(nextUpdate.getUTCDate() + 1);
-            }
-            
-            const timeDiff = nextUpdate - now;
-            setTimeout(() => {
-                generateDailyRate();
-                startTimer();
-            }, timeDiff);
-        }
-
-        // Новый контент - Quantum Miner
-        function upgradeQuantum() {
-            const cost = 5000 * Math.pow(2, gameState.quantumLevel);
-            if(gameState.nes >= cost) {
-                gameState.nes -= cost;
-                gameState.quantumLevel++;
-                updateUI();
-            }
-        }
-
-        // Обновленный расчет хешрейта
-        function calculateTotalHash() {
-            let hash = 
-                (gameState.gpuLevel * 50) + 
-                (gameState.asicLevel * 200) +
-                (gameState.quantumLevel * 1000);
+        // Загрузка прогресса
+        function loadGame() {
+            const saved = localStorage.getItem('nesMiner');
+            if (saved) {
+                const loaded = JSON.parse(saved);
+                const offlineTime = Date.now() - loaded.lastUpdate;
                 
-            return hash * calculateMultiplier();
+                // Оффлайн майнинг
+                if (offlineTime > 1000) {
+                    const seconds = Math.min(offlineTime / 1000, 2592000); // Макс 30 дней
+                    loaded.hash += calculateTotalHash(loaded) * seconds;
+                }
+                
+                gameState = loaded;
+            }
         }
 
-        // Обновленный интерфейс
-        function updateUI() {
-            // Добавляем отображение Quantum Level
-            document.getElementById('quantumLevel').textContent = gameState.quantumLevel;
-            // Остальное обновление UI остается прежним
-            saveGame();
+        // Генерация курса по дате
+        function generateDailyRate() {
+            const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            let seed = parseInt(date, 10);
+            const rate = (Math.sin(seed) + 1) * 2 + 1; // 1.00 - 5.00
+            gameState.exchangeRate = Math.round(rate * 100) / 100;
+        }
+
+        // Таймер до 12:00 UTC
+        function updateTimer() {
+            const now = new Date();
+            const nextReset = new Date(Date.UTC(
+                now.getUTCFullYear(),
+                now.getUTCMonth(),
+                now.getUTCDate(),
+                12, 0, 0, 0
+            ));
+            
+            if (now >= nextReset) {
+                nextReset.setUTCDate(nextReset.getUTCDate() + 1);
+            }
+            
+            const diff = nextReset - now;
+            const hours = Math.floor(diff / 3600000);
+            const minutes = Math.floor((diff % 3600000) / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Достижения
+        const achievements = [
+            { id: 'first100', name: 'Первые 100 NES', check: s => s.nes >= 100 },
+            { id: 'hashKing', name: '10 000 Hash', check: s => s.hash >= 10000 },
+            { id: 'millionaire', name: '1 000 000 NES', check: s => s.nes >= 1e6 }
+        ];
+
+        function checkAchievements() {
+            achievements.forEach(ach => {
+                if (!gameState.achievements.includes(ach.id) && ach.check(gameState)) {
+                    gameState.achievements.push(ach.id);
+                    alert(`Достижение: ${ach.name}!`);
+                }
+            });
         }
 
         // Инициализация
-        window.onload = function() {
-            loadGame();
-            generateDailyRate();
+        loadGame();
+        generateDailyRate();
+        setInterval(() => {
+            gameState.playTime++;
+            gameState.hash += calculateTotalHash() / 3600;
+            checkAchievements();
+            saveGame();
             updateUI();
-            
-            // Автосохранение каждые 30 секунд
-            setInterval(saveGame, 30000);
-            
-            // Главный игровой цикл
-            setInterval(() => {
-                gameState.hash += calculateTotalHash() / 3600;
-                updateUI();
-            }, 1000);
-        }
+        }, 1000);
 
-        // Добавляем новую кнопку в HTML:
-        /*
-        <div class="upgrade-item">
-            <h4>🌀 Quantum Miner (Level <span id="quantumLevel">0</span>)</h4>
-            <p>+1000 Hash/s</p>
-            <button onclick="upgradeQuantum()">Купить (🪙<span id="quantumCost">5000</span>)</button>
-        </div>
-        */
+        // Остальные функции...
     </script>
 </body>
 </html>
