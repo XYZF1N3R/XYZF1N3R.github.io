@@ -1,8 +1,9 @@
+
 document.addEventListener("DOMContentLoaded", () => {
     loadGameState();
     showLocation("location-hangar");
     startIncome();
-    updateBalanceUI();
+    updateUI();
 });
 
 let balance = 100;
@@ -15,7 +16,7 @@ let upgrades = {
     wheat_field: { level: 1, income: 5, cost: 50 }
 };
 
-// Загружаем данные
+// Загрузка данных
 function loadGameState() {
     let savedBalance = localStorage.getItem("farmBalance");
     let savedUpgrades = localStorage.getItem("farmUpgrades");
@@ -23,16 +24,16 @@ function loadGameState() {
     if (savedBalance !== null) balance = parseInt(savedBalance);
     if (savedUpgrades !== null) upgrades = JSON.parse(savedUpgrades);
 
-    updateBalanceUI();
+    updateUI();
 }
 
-// Сохраняем данные
+// Сохранение данных
 function saveGameState() {
     localStorage.setItem("farmBalance", balance);
     localStorage.setItem("farmUpgrades", JSON.stringify(upgrades));
 }
 
-// Переключение локаций
+// Переключение локации
 function showLocation(locationId) {
     document.querySelectorAll(".location").forEach(loc => loc.classList.remove("active"));
     document.getElementById(locationId).classList.add("active");
@@ -59,15 +60,12 @@ function upgradeCurrentLocation() {
         upgrade.income += Math.floor(upgrade.income * 0.5);
         upgrade.cost = Math.floor(upgrade.cost * 1.5);
 
-        updateBalanceUI();
-        updateUpgradeButton();
+        updateUI();
         saveGameState();
 
         let button = document.getElementById("upgrade-btn");
         button.classList.add("upgrade-effect");
         setTimeout(() => button.classList.remove("upgrade-effect"), 500);
-
-        document.querySelector(`#location-${currentLocation} .level`).textContent = upgrade.level;
     } else {
         console.log("Недостаточно денег!");
     }
@@ -76,25 +74,35 @@ function upgradeCurrentLocation() {
 // Пассивный доход
 function startIncome() {
     setInterval(() => {
-        let totalIncome = 0;
-        for (let key in upgrades) {
-            totalIncome += upgrades[key].income;
-        }
+        let totalIncome = Object.values(upgrades).reduce((sum, loc) => sum + loc.income, 0);
         balance += totalIncome;
+
         document.getElementById("passive-income").textContent = totalIncome;
-        updateBalanceUI();
+        updateUI();
         saveGameState();
     }, 3000);
 }
 
-// Обновление баланса и размера окна
-function updateBalanceUI() {
+// Обновление интерфейса
+function updateUI() {
     let balanceBox = document.getElementById("balance-box");
     document.getElementById("balance").textContent = balance;
 
-    let newSize = 100 + Math.log(balance + 1) * 20; // Логарифмический рост
+    let totalIncome = Object.values(upgrades).reduce((sum, loc) => sum + loc.income, 0);
+    document.getElementById("passive-income").textContent = totalIncome;
+
+    let newSize = 100 + Math.log(balance + 1) * 20;
     balanceBox.style.width = `${newSize}px`;
     balanceBox.style.height = `${newSize / 2}px`;
+
+    for (let key in upgrades) {
+        let levelElement = document.querySelector(`#location-${key} .level`);
+        if (levelElement) {
+            levelElement.textContent = upgrades[key].level;
+        }
+    }
+
+    updateUpgradeButton();
 }
 
 // Обновление кнопки улучшения
@@ -104,4 +112,3 @@ function updateUpgradeButton() {
     document.getElementById("upgrade-cost").textContent = upgrade.cost;
     document.getElementById("upgrade-btn").style.display = "block";
 }
-
