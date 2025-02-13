@@ -1,81 +1,60 @@
 body {
+    background-color: #b5d19b;
     font-family: Arial, sans-serif;
-    background-color: #a3c585;
     text-align: center;
     margin: 0;
     padding: 0;
 }
 
-#top-bar {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-}
-
-#balance-box, #income-box {
-    background: white;
-    padding: 10px;
-    border-radius: 10px;
-    font-size: 18px;
-}
-
-#balance-box {
-    position: absolute;
+/* Верхние окна баланса и дохода */
+.balance-container {
+    position: fixed;
     top: 10px;
     left: 10px;
-}
-
-#income-box {
-    position: absolute;
-    top: 10px;
     right: 10px;
+    display: flex;
+    justify-content: space-between;
 }
 
-#location-name {
-    position: absolute;
-    bottom: 90px;
-    left: 50%;
-    transform: translateX(-50%);
+.balance-box, .income-box {
     background: white;
-    padding: 5px 15px;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    min-width: 100px;
+}
+
+/* Название локации и кнопка улучшения */
+.location-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 15px;
     border-radius: 10px;
     font-size: 20px;
+    font-weight: bold;
 }
 
-#bottom-panel {
-    position: absolute;
+/* Нижнее меню */
+.bottom-menu {
+    position: fixed;
     bottom: 0;
-    width: 100%;
-    background: #4a752c;
+    left: 0;
+    right: 0;
+    background: #4d8f3c;
     padding: 10px;
-}
-
-#upgrade-btn {
-    display: block;
-    width: 90%;
-    margin: 0 auto 10px;
-    padding: 10px;
-    background: #3e8e41;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 18px;
-}
-
-#bottom-buttons {
     display: flex;
-    justify-content: center;
-    gap: 5px;
+    justify-content: space-around;
 }
 
-#bottom-buttons button {
-    background: #2e5d23;
+.button {
+    background: #367829;
     color: white;
-    border: none;
     padding: 10px;
     border-radius: 5px;
-    font-size: 16px;
-}
-
+    border: none;
 }
 
