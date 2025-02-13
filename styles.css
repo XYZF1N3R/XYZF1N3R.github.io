@@ -1,83 +1,89 @@
-/* Общие стили */
+/* Основные стили */
 body {
     margin: 0;
     padding: 0;
-    background-color: #b2d080;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100vh;
-}
-
-/* Контейнеры баланса и дохода */
-#balance-container, #income-container {
-    position: fixed;
-    top: 10px;
-    background: white;
-    padding: 10px 15px;
-    border-radius: 15px;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-/* Баланс слева */
-#balance-container {
-    left: 10px;
-}
-
-/* Доход справа */
-#income-container {
-    right: 10px;
-}
-
-/* Нижний блок с названием локации и кнопками */
-#bottom-menu {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #4c853a;
-    padding: 10px;
+    font-family: 'Arial', sans-serif;
+    background: #1e1e1e;
+    color: #ffffff;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Название текущей локации */
-#location-name {
-    font-size: 18px;
+/* Контейнер баланса и дохода */
+#balance-box {
+    width: 90%;
+    max-width: 600px;
+    background: #333333;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+#balance, #passive-income {
+    font-size: 24px;
     font-weight: bold;
-    color: white;
-    background: white;
-    padding: 5px 15px;
-    border-radius: 15px;
-    margin-bottom: 5px;
 }
 
-/* Кнопки смены локаций */
-.location-button {
-    background: white;
-    color: black;
-    border: 1px solid #4c853a;
-    padding: 8px 15px;
-    margin: 3px;
-    border-radius: 5px;
-    font-size: 14px;
+/* Локации */
+.locations-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    width: 90%;
+    max-width: 600px;
+    margin-bottom: 20px;
+}
+
+.location {
+    background: #444444;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
     cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.location.active {
+    background: #555555;
+    transform: scale(1.05);
+}
+
+.location h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.2em;
+}
+
+.location .level {
+    font-size: 1.5em;
+    color: #f1c40f;
 }
 
 /* Кнопка улучшения */
-#upgrade-button {
-    background: #2d6a2d;
-    color: white;
-    padding: 10px 20px;
-    margin: 5px;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
+#upgrade-btn {
+    background: #4CAF50;
     border: none;
+    padding: 15px 30px;
+    color: white;
+    border-radius: 25px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
 }
 
+#upgrade-btn:hover {
+    background: #45a049;
+    transform: scale(1.05);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .locations-container {
+        grid-template-columns: 1fr;
+    }
+}
