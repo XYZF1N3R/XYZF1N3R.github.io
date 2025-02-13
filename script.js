@@ -65,7 +65,7 @@ function upgradeCurrentLocation() {
         updatePassiveIncome();
         saveGameState();
 
-        document.querySelector(`#location-${currentLocation} .level`).textContent = upgrade.level;
+        document.querySelector(#location-${currentLocation} .level).textContent = upgrade.level;
     } else {
         console.log("Недостаточно денег!");
     }
@@ -95,6 +95,12 @@ function updatePassiveIncome() {
     document.getElementById("passive-income").textContent = calculateTotalIncome();
 }
 
+// Обновление баланса и размера окна
+function updateBalanceUI() {
+    let balanceBox = document.getElementById("balance-box");
+    document.getElementById("balance").textContent = balance;
+}
+
 // Обновление кнопки улучшения
 function updateUpgradeButton() {
     if (!currentLocation) return;
@@ -102,4 +108,3 @@ function updateUpgradeButton() {
     document.getElementById("upgrade-cost").textContent = upgrade.cost;
     document.getElementById("upgrade-btn").style.display = "block";
 }
-
