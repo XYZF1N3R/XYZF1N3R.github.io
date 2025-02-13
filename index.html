@@ -7,11 +7,18 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div id="top-bar">
+        <div id="balance-box">
+            <h3>Баланс:</h3>
+            <p id="balance">100</p>
+        </div>
+        <div id="income-box">
+            <h3>Пассивный доход:</h3>
+            <p id="passive-income">11</p>
+        </div>
+    </div>
+
     <div id="game">
-        <h2>Баланс: <span id="balance">100</span> 💰</h2>
-
-        <button id="upgrade-btn" onclick="upgradeCurrentLocation()">Улучшить (<span id="upgrade-cost">10</span>💰)</button>
-
         <div id="locations">
             <div id="location-hangar" class="location active">
                 <h2>Ангар</h2>
@@ -19,21 +26,25 @@
             </div>
 
             <div id="location-chicken_coop" class="location">
-                <h2>Курятник</h2>
+                <h2>Курятник <span class="level">1</span></h2>
             </div>
 
             <div id="location-barn" class="location">
-                <h2>Коровник</h2>
+                <h2>Коровник <span class="level">1</span></h2>
             </div>
 
             <div id="location-pigsty" class="location">
-                <h2>Свинарник</h2>
+                <h2>Свинарник <span class="level">1</span></h2>
             </div>
 
             <div id="location-wheat_field" class="location">
-                <h2>Ферма пшеницы</h2>
+                <h2>Ферма пшеницы <span class="level">1</span></h2>
             </div>
         </div>
+    </div>
+
+    <div id="bottom-panel">
+        <button id="upgrade-btn" onclick="upgradeCurrentLocation()">Улучшить (<span id="upgrade-cost">10</span>💰)</button>
 
         <div id="bottom-buttons">
             <button onclick="showLocation('location-hangar')">Ангар</button>
