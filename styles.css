@@ -1,127 +1,81 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: #a3c585;
     text-align: center;
-    background-color: #e0f7da;
     margin: 0;
     padding: 0;
 }
 
-/* Верхняя панель с балансом и пассивным доходом */
 #top-bar {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     padding: 10px;
 }
 
 #balance-box, #income-box {
-    padding: 10px;
     background: white;
+    padding: 10px;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: width 0.3s, height 0.3s;
+    font-size: 18px;
 }
 
-/* Увеличение окна баланса при росте денег */
 #balance-box {
-    min-width: 100px;
-    min-height: 50px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
 }
 
 #income-box {
-    min-width: 120px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
-/* Игровая зона */
-#game {
-    width: 100%;
-    max-width: 400px;
-    margin: 20px auto;
-    padding: 20px;
+#location-name {
+    position: absolute;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
     background: white;
+    padding: 5px 15px;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-size: 20px;
 }
 
-/* Локации */
-#locations {
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.location {
-    display: none;
-    opacity: 0;
-    transform: scale(0.9);
-    transition: opacity 0.5s, transform 0.5s;
-}
-
-.location.active {
-    display: block;
-    opacity: 1;
-    transform: scale(1);
-}
-
-/* Панель внизу */
 #bottom-panel {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     width: 100%;
-    background: white;
+    background: #4a752c;
     padding: 10px;
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Кнопка улучшения над кнопками локаций */
 #upgrade-btn {
+    display: block;
     width: 90%;
-    margin: 10px auto;
+    margin: 0 auto 10px;
     padding: 10px;
-    font-size: 16px;
-    border: none;
-    background-color: #4caf50;
+    background: #3e8e41;
     color: white;
+    border: none;
     border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
+    font-size: 18px;
 }
 
-#upgrade-btn:hover {
-    background-color: #45a049;
-}
-
-/* Кнопки локаций внизу */
 #bottom-buttons {
     display: flex;
-    justify-content: space-around;
-    margin-top: 10px;
+    justify-content: center;
+    gap: 5px;
 }
 
 #bottom-buttons button {
-    width: 60px;
-    height: 60px;
-    font-size: 12px;
-    background-color: #4caf50;
+    background: #2e5d23;
     color: white;
     border: none;
+    padding: 10px;
     border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
+    font-size: 16px;
 }
 
-#bottom-buttons button:hover {
-    background-color: #45a049;
-}
-
-/* Анимация улучшений */
-.upgrade-effect {
-    animation: upgradeGlow 0.5s ease-in-out;
-}
-
-@keyframes upgradeGlow {
-    0% { box-shadow: 0 0 5px #ffeb3b; }
-    50% { box-shadow: 0 0 20px #ffeb3b; }
-    100% { box-shadow: 0 0 5px #ffeb3b; }
 }
 
