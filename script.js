@@ -99,6 +99,10 @@ function updatePassiveIncome() {
 function updateBalanceUI() {
     let balanceBox = document.getElementById("balance-box");
     document.getElementById("balance").textContent = balance;
+
+    let newSize = 100 + Math.log(balance + 1) * 20; // Логарифмический рост
+    balanceBox.style.width = ${newSize}px;
+    balanceBox.style.height = ${newSize / 2}px;
 }
 
 // Обновление кнопки улучшения
