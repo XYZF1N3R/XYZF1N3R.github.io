@@ -1,60 +1,77 @@
+/* Общие стили */
 body {
-    background-color: #b5d19b;
-    font-family: Arial, sans-serif;
-    text-align: center;
     margin: 0;
     padding: 0;
+    background-color: #b2d080;
+    font-family: Arial, sans-serif;
+    text-align: center;
 }
 
-/* Верхние окна баланса и дохода */
-.balance-container {
+/* Баланс (левый верхний угол) */
+#balance-container {
     position: fixed;
     top: 10px;
     left: 10px;
-    right: 10px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.balance-box, .income-box {
     background: white;
     padding: 10px;
-    border-radius: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    min-width: 100px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
 }
 
-/* Название локации и кнопка улучшения */
-.location-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* Пассивный доход (правый верхний угол) */
+#income-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
     background: white;
-    padding: 15px;
-    border-radius: 10px;
-    font-size: 20px;
-    font-weight: bold;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
 }
 
-/* Нижнее меню */
-.bottom-menu {
+/* Нижняя панель (название локации + кнопки) */
+#bottom-menu {
     position: fixed;
     bottom: 0;
     left: 0;
-    right: 0;
-    background: #4d8f3c;
+    width: 100%;
+    background: #4c853a;
     padding: 10px;
     display: flex;
-    justify-content: space-around;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 
-.button {
-    background: #367829;
+/* Название текущей локации */
+#location-name {
+    font-size: 18px;
+    font-weight: bold;
     color: white;
-    padding: 10px;
+    margin-right: 20px;
+}
+
+/* Кнопки смены локаций */
+.location-button {
+    background: white;
+    color: black;
+    border: 1px solid #4c853a;
+    padding: 5px 10px;
+    margin: 5px;
     border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Кнопка улучшения */
+#upgrade-button {
+    background: #2d6a2d;
+    color: white;
+    padding: 8px 15px;
+    margin: 5px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
     border: none;
 }
-
