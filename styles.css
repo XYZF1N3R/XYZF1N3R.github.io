@@ -5,37 +5,34 @@ body {
     background-color: #b2d080;
     font-family: Arial, sans-serif;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
 }
 
-/* Контейнер баланса (верхний левый угол) */
+/* Контейнеры баланса и дохода */
+#balance-container, #income-container {
+    position: fixed;
+    top: 10px;
+    background: white;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Баланс слева */
 #balance-container {
-    position: fixed;
-    top: 10px;
     left: 10px;
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-    font-size: 18px;
-    min-width: 150px;
-    text-align: center;
 }
 
-/* Контейнер пассивного дохода (верхний правый угол) */
+/* Доход справа */
 #income-container {
-    position: fixed;
-    top: 10px;
     right: 10px;
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-    font-size: 18px;
-    min-width: 150px;
-    text-align: center;
 }
 
-/* Нижняя панель (название локации + кнопки) */
+/* Нижний блок с названием локации и кнопками */
 #bottom-menu {
     position: fixed;
     bottom: 0;
@@ -44,18 +41,20 @@ body {
     background: #4c853a;
     padding: 10px;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* Название текущей локации */
 #location-name {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     color: white;
-    margin-right: 20px;
+    background: white;
+    padding: 5px 15px;
+    border-radius: 15px;
+    margin-bottom: 5px;
 }
 
 /* Кнопки смены локаций */
@@ -64,9 +63,9 @@ body {
     color: black;
     border: 1px solid #4c853a;
     padding: 8px 15px;
-    margin: 5px;
+    margin: 3px;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
 }
 
@@ -77,7 +76,8 @@ body {
     padding: 10px 20px;
     margin: 5px;
     border-radius: 5px;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
     border: none;
 }
+
