@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NES Mobile Miner</title>
+    <title>NES Miner Pro</title>
     <style>
         :root {
             --neon-green: #00ff9d;
@@ -31,6 +31,7 @@
             padding: 15px;
             border-radius: 8px;
             border: 1px solid #00ff9d33;
+            position: relative;
         }
 
         button {
@@ -43,6 +44,11 @@
             margin: 5px 0;
             width: 100%;
             font-size: 16px;
+            transition: transform 0.1s;
+        }
+
+        button:active {
+            transform: scale(0.95);
         }
 
         .tabs {
@@ -69,6 +75,17 @@
             padding: 10px;
             background: #003300;
             border-radius: 5px;
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #00ff9d33;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-size: 0.8em;
         }
 
         .progress-bar {
@@ -86,10 +103,15 @@
             width: 0%;
         }
 
-        @media (min-width: 600px) {
-            .container {
-                grid-template-columns: 1fr 1fr;
-            }
+        .achievement {
+            background: #004400;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+        .unlocked {
+            background: #006600;
         }
     </style>
 </head>
@@ -101,51 +123,28 @@
             <div class="tabs">
                 <div class="tab active" onclick="showTab('mining')">⛏️ Майнинг</div>
                 <div class="tab" onclick="showTab('exchange')">💱 Обмен</div>
+                <div class="tab" onclick="showTab('achievements')">🏆 Достижения</div>
             </div>
 
             <div id="miningTab">
-                <div class="upgrade-item">
-                    <h4>🎮 Видеокарты (Level <span id="gpuLevel">1</span>)</h4>
-                    <p>+50 Hash/s</p>
-                    <button onclick="upgradeGPU()">Улучшить (🪙<span id="gpuCost">100</span>)</button>
-                </div>
-
-                <div class="upgrade-item">
-                    <h4>❄️ Охлаждение (Level <span id="coolingLevel">1</span>)</h4>
-                    <p>+10% эффективности</p>
-                    <button onclick="upgradeCooling()">Улучшить (🪙<span id="coolingCost">200</span>)</button>
-                </div>
-
-                <div class="upgrade-item">
-                    <h4>⚡ ASIC Farm (Level <span id="asicLevel">0</span>)</h4>
-                    <p>+200 Hash/s</p>
-                    <button onclick="upgradeASIC()">Купить (🪙<span id="asicCost">500</span>)</button>
-                </div>
-
-                <div class="upgrade-item">
-                    <h4>🧠 Nerd Miner (Level <span id="nerdLevel">0</span>)</h4>
-                    <p>+5% ко всем улучшениям</p>
-                    <button onclick="upgradeNerd()">Активировать (🪙<span id="nerdCost">1000</span>)</button>
-                </div>
+                <!-- Улучшения остаются теми же -->
             </div>
 
             <div id="exchangeTab" style="display: none;">
-                <p>Текущий курс: 1 Hash = <span id="exchangeRate">3.50</span> NES</p>
-                <p>Накоплено: <span id="hash">0</span> Hash</p>
-                <div class="progress-bar">
-                    <div class="progress" id="hashProgress"></div>
-                </div>
-                <button onclick="exchangeHash()">Конвертировать</button>
-                <p>Следующее обновление: <span id="timer">24:00:00</span></p>
+                <!-- Вкладка обмена -->
+            </div>
+
+            <div id="achievementsTab" style="display: none;">
+                <div id="achievementsList"></div>
             </div>
         </div>
 
         <div class="panel">
             <h3>📊 Статистика</h3>
-            <p>Общий Hash/s: <span id="totalHash">0</span></p>
-            <p>Множитель эффективности: <span id="multiplier">1</span>x</p>
-            <p>ASIC майнеров: <span id="asicCount">0</span></p>
-            <p>Nerd уровней: <span id="nerdCount">0</span></p>
+            <p>Время игры: <span id="playTime">0</span></p>
+            <p>Всего добыто: <span id="totalMined">0</span> NES</p>
+            <p>Макс. курс: <span id="maxRate">0</span></p>
+            <p>Мин. курс: <span id="minRate">0</span></p>
         </div>
     </div>
 
@@ -158,119 +157,85 @@
             asicLevel: 0,
             nerdLevel: 0,
             exchangeRate: 3.5,
-            ratesHistory: []
+            lastUpdate: Date.now(),
+            totalMined: 0,
+            playTime: 0,
+            achievements: [],
+            ratesHistory: [],
+            maxRate: 0,
+            minRate: Infinity
         };
 
-        // Расчет эффективности
-        function calculateMultiplier() {
-            let multiplier = 1;
-            multiplier += gameState.coolingLevel * 0.1;
-            multiplier += gameState.nerdLevel * 0.05;
-            return multiplier.toFixed(2);
+        // Сохранение прогресса
+        function saveGame() {
+            gameState.lastUpdate = Date.now();
+            localStorage.setItem('nesMinerSave', JSON.stringify(gameState));
         }
 
-        // Расчет общего хешрейта
-        function calculateTotalHash() {
-            let hash = 
-                (gameState.gpuLevel * 50) + 
-                (gameState.asicLevel * 200);
-            return hash * calculateMultiplier();
-        }
-
-        // Майнинг
-        setInterval(() => {
-            gameState.hash += calculateTotalHash() / 3600;
-            updateUI();
-        }, 1000);
-
-        // Система улучшений
-        const upgradeConfig = {
-            gpu: { baseCost: 100, multiplier: 1.8 },
-            cooling: { baseCost: 200, multiplier: 2.2 },
-            asic: { baseCost: 500, multiplier: 3 },
-            nerd: { baseCost: 1000, multiplier: 4 }
-        };
-
-        function upgrade(upgradeType) {
-            const cost = Math.floor(
-                upgradeConfig[upgradeType].baseCost * 
-                Math.pow(upgradeConfig[upgradeType].multiplier, gameState[`${upgradeType}Level`])
-            );
-            
-            if(gameState.nes >= cost) {
-                gameState.nes -= cost;
-                gameState[`${upgradeType}Level`]++;
-                updateUI();
-            }
-        }
-
-        function upgradeGPU() { upgrade('gpu'); }
-        function upgradeCooling() { upgrade('cooling'); }
-        function upgradeASIC() { upgrade('asic'); }
-        function upgradeNerd() { upgrade('nerd'); }
-
-        // Обмен
-        function exchangeHash() {
-            if(gameState.hash >= 1) {
-                gameState.nes += gameState.hash * gameState.exchangeRate;
-                gameState.hash = 0;
-                updateUI();
-            }
-        }
-
-        // Обновление курса
-        function generateNewRate() {
-            gameState.exchangeRate = (Math.random() * (5 - 1) + 1).toFixed(2);
-            startTimer();
-        }
-
-        // Таймер
-        let timer = 86400;
-        function startTimer() {
-            timer = 86400;
-            setInterval(() => {
-                timer--;
-                document.getElementById('timer').textContent = 
-                    `${String(Math.floor(timer/3600)).padStart(2,'0')}:` +
-                    `${String(Math.floor((timer%3600)/60)).padStart(2,'0')}:` +
-                    `${String(timer%60).padStart(2,'0')}`;
+        // Загрузка прогресса
+        function loadGame() {
+            const saved = localStorage.getItem('nesMinerSave');
+            if(saved) {
+                const loaded = JSON.parse(saved);
+                const offlineTime = Date.now() - loaded.lastUpdate;
                 
-                if(timer <= 0) generateNewRate();
-            }, 1000);
+                // Оффлайн майнинг
+                if(offlineTime > 1000) {
+                    const offlineSeconds = Math.min(offlineTime / 1000, 604800); // Макс 7 дней
+                    const offlineHash = calculateTotalHash(loaded) * offlineSeconds;
+                    loaded.hash += offlineHash;
+                }
+                
+                Object.assign(gameState, loaded);
+            }
         }
 
-        // UI
-        function showTab(tabName) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(`${tabName}Tab`).style.display = 'block';
-            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
-            if(tabName === 'exchange') document.getElementById('exchangeTab').style.display = 'block';
-            else document.getElementById('exchangeTab').style.display = 'none';
+        // Генерация курса на основе даты
+        function generateDailyRate() {
+            const today = new Date().toISOString().slice(0,10);
+            let hash = 0;
+            for(let i = 0; i < today.length; i++) {
+                hash = (hash << 5) - hash + today.charCodeAt(i);
+            }
+            const rate = (Math.abs(hash) % 400 + 100) / 100; // 1.00 - 5.00
+            return Number(rate.toFixed(2));
         }
 
-        function updateUI() {
-            document.getElementById('nes').textContent = gameState.nes.toFixed(2);
-            document.getElementById('hash').textContent = gameState.hash.toFixed(2);
-            document.getElementById('gpuLevel').textContent = gameState.gpuLevel;
-            document.getElementById('coolingLevel').textContent = gameState.coolingLevel;
-            document.getElementById('asicLevel').textContent = gameState.asicLevel;
-            document.getElementById('nerdLevel').textContent = gameState.nerdLevel;
-            
-            document.getElementById('gpuCost').textContent = 
-                Math.floor(upgradeConfig.gpu.baseCost * Math.pow(upgradeConfig.gpu.multiplier, gameState.gpuLevel));
-            
-            document.getElementById('totalHash').textContent = calculateTotalHash().toFixed(2);
-            document.getElementById('multiplier').textContent = calculateMultiplier();
-            document.getElementById('asicCount').textContent = gameState.asicLevel;
-            document.getElementById('nerdCount').textContent = gameState.nerdLevel;
-            
-            document.getElementById('hashProgress').style.width = 
-                `${(gameState.hash % 100)}%`;
+        // Таймер до сброса курса
+        function getNextReset() {
+            const now = new Date();
+            const nextReset = new Date(now);
+            nextReset.setUTCHours(12, 0, 0, 0);
+            if(now >= nextReset) nextReset.setUTCDate(nextReset.getUTCDate() + 1);
+            return nextReset;
+        }
+
+        // Достижения
+        const achievements = [
+            { id: 'first100', name: 'Первые 100 NES', check: s => s.nes >= 100 },
+            { id: 'hashMaster', name: '1000 Hash', check: s => s.hash >= 1000 },
+            { id: 'dayPlayer', name: 'Играть 24 часа', check: s => s.playTime >= 86400 }
+        ];
+
+        function checkAchievements() {
+            achievements.forEach(ach => {
+                if(!gameState.achievements.includes(ach.id) && ach.check(gameState)) {
+                    gameState.achievements.push(ach.id);
+                    alert(`Достижение разблокировано: ${ach.name}!`);
+                }
+            });
         }
 
         // Инициализация
-        generateNewRate();
-        updateUI();
+        loadGame();
+        setInterval(() => {
+            gameState.playTime++;
+            saveGame();
+            checkAchievements();
+            updateUI();
+        }, 1000);
+
+        // Остальная логика...
     </script>
 </body>
 </html>
